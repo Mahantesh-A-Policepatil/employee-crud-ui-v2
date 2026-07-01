@@ -1,0 +1,77 @@
+Reusable CRUD Reference (v2)
+===============================
+
+This project uses a config-driven CRUD structure. To add a new entity, copy an
+existing config and wrapper — you do not need to duplicate CrudPage logic.
+
+
+Main files
+----------
+
+1. `src/components/crud/CrudPage.js` — shared list/create/edit/delete page
+2. `src/components/crud/CrudFormModal.js` — shared form modal
+3. `src/components/crud/crudUtils.js` — validation helpers
+4. `src/api/apiClient.js` — Axios client with auth header and safe errors
+5. `src/config/routes.js` — route, sidebar, and permission configuration
+
+
+Add a new CRUD (example: Category)
+----------------------------------
+
+### Step 1: Create config
+
+Copy `src/crud/departmentCrudConfig.js` to `src/crud/categoryCrudConfig.js`
+and update `title`, `entityName`, `apiEndpoint`, `tableColumns`, and `fields`.
+
+### Step 2: Create page wrapper
+
+Create `src/components/category/ListCategory.js`:
+
+```javascript
+import React from "react";
+import CrudPage from "../crud/CrudPage";
+import categoryCrudConfig from "../../crud/categoryCrudConfig";
+
+function ListCategory() {
+    return <CrudPage config={categoryCrudConfig} />;
+}
+
+export default ListCategory;
+```
+
+### Step 3: Register route
+
+Add an entry to `PROTECTED_ROUTES` in `src/config/routes.js`:
+
+```javascript
+{
+    path: "/categories",
+    permission: "categories.view",
+    sidebar: {
+        label: "Category Management",
+        icon: "\u{1F4C1}",
+    },
+    Component: ListCategory,
+},
+```
+
+The router (`src/index.js`) and sidebar read from this config automatically.
+
+### Step 4: Backend
+
+Ensure Laravel exposes:
+
+- `GET/POST /api/categories`
+- `GET/PUT/DELETE /api/categories/{id}`
+- DataTables-compatible `GET /api/categories` response
+- Optional `GET /api/.../options` for select fields
+
+
+Checklist
+---------
+
+1. Copy and edit a CRUD config in `src/crud/`
+2. Add `List*.js` wrapper in `src/components/<entity>/`
+3. Add route entry in `src/config/routes.js`
+4. Add matching Laravel API routes and permissions
+5. Run `npm test` and `npm run build`
