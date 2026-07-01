@@ -68,3 +68,4 @@ See `CRUD_REFERENCE.txt` for the step-by-step checklist.
 - `npm start` — development server
 - `npm test` — run tests
 - `npm run build` — production build
+- `npm test -- --watch=false --runInBand --runTestsByPath src/components/routing/ProtectedRoute.test.js`

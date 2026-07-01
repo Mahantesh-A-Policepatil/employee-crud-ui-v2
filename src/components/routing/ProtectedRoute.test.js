@@ -3,7 +3,8 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "../auth/Login";
 import { AuthProvider } from "../../contexts/AuthContext";
-import { clearStoredAuth } from "../../services/auth";
+import apiClient from "../../api/apiClient";
+import { clearStoredAuth, setStoredAuth } from "../../services/auth";
 
 jest.mock("../../api/apiClient", () => ({
     __esModule: true,
@@ -40,4 +41,41 @@ test("redirects unauthenticated users to login", async () => {
     );
 
     expect(await screen.findByRole("heading", { name: /login/i })).toBeInTheDocument();
+});
+
+test("shows the forbidden page when a user lacks the required permission", async () => {
+    clearStoredAuth();
+    setStoredAuth({
+        token: "token",
+        user: {
+            permissions: ["departments.view"],
+        },
+    });
+
+    apiClient.get.mockResolvedValueOnce({
+        data: {
+            permissions: ["departments.view"],
+        },
+    });
+
+    render(
+        <MemoryRouter initialEntries={["/roles"]}>
+            <AuthProvider>
+                <Routes>
+                    <Route
+                        path="/roles"
+                        element={
+                            <ProtectedRoute permission="roles.view">
+                                <div>Protected content</div>
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route path="/departments" element={<div>Departments page</div>} />
+                </Routes>
+            </AuthProvider>
+        </MemoryRouter>
+    );
+
+    expect(await screen.findByRole("heading", { name: /forbidden/i })).toBeInTheDocument();
+    expect(screen.getByText(/you do not have permission to access this page/i)).toBeInTheDocument();
 });

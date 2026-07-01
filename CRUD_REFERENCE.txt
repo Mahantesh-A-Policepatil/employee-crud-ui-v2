@@ -2,30 +2,84 @@ Reusable CRUD Reference (v2)
 ===============================
 
 This project uses a config-driven CRUD structure. To add a new entity, copy an
-existing config and wrapper — you do not need to duplicate CrudPage logic.
+existing CRUD config and wrapper, then change the entity-specific values. In most
+cases you do not need to modify the shared page component.
 
 
 Main files
 ----------
 
-1. `src/components/crud/CrudPage.js` — shared list/create/edit/delete page
-2. `src/components/crud/CrudFormModal.js` — shared form modal
-3. `src/components/crud/crudUtils.js` — validation helpers
-4. `src/api/apiClient.js` — Axios client with auth header and safe errors
-5. `src/config/routes.js` — route, sidebar, and permission configuration
+1. src/components/crud/CrudPage.js — shared list/create/edit/delete page
+2. src/components/crud/CrudFormModal.js — shared form modal
+3. src/components/crud/crudUtils.js — shared validation helpers
+4. src/api/apiClient.js — Axios client with auth header and safe errors
+5. src/config/routes.js — route, sidebar, and permission configuration
+6. src/crud/<entity>CrudConfig.js — entity-specific table/form configuration
+7. src/components/<entity>/List<Entity>.js — thin wrapper that passes the config to CrudPage
 
 
-Add a new CRUD (example: Category)
-----------------------------------
+Recommended copy-paste workflow
+--------------------------------
 
-### Step 1: Create config
+Use an existing module as the template:
+- Employee CRUD: src/crud/employeeCrudConfig.js and src/components/employee/ListEmployee.js
+- Role CRUD: src/crud/roleCrudConfig.js and src/components/role/ListRole.js
 
-Copy `src/crud/departmentCrudConfig.js` to `src/crud/categoryCrudConfig.js`
-and update `title`, `entityName`, `apiEndpoint`, `tableColumns`, and `fields`.
+Example: create Category CRUD by copying Employee CRUD.
 
-### Step 2: Create page wrapper
 
-Create `src/components/category/ListCategory.js`:
+Step 1: Create the config file
+------------------------------
+
+Copy src/crud/employeeCrudConfig.js to src/crud/categoryCrudConfig.js and change:
+
+- title: page heading shown on the screen
+- entityName: singular label used in messages like "Create Category"
+- apiEndpoint: base API URL, for example "/categories"
+- permissions: permission names for view/create/update/delete
+- tableColumns: columns shown in the table
+- fields: form inputs for create/edit modal
+
+Example shape:
+
+```javascript
+const categoryCrudConfig = {
+    title: "Category Management",
+    entityName: "Category",
+    apiEndpoint: "/categories",
+    idField: "id",
+    permissions: {
+        view: "categories.view",
+        create: "categories.create",
+        update: "categories.update",
+        delete: "categories.delete",
+    },
+    tableColumns: [
+        { data: "id", title: "ID" },
+        { data: "name", title: "Name" },
+    ],
+    fields: [
+        {
+            name: "name",
+            label: "Name",
+            required: true,
+        },
+    ],
+};
+
+export default categoryCrudConfig;
+```
+
+Important notes:
+- If the entity uses a dropdown, use a field with type "select" and set optionsEndpoint.
+- If the entity needs a checkbox group, copy the pattern from roleCrudConfig.js.
+- Make sure the field names match the backend request payload exactly.
+
+
+Step 2: Create the wrapper component
+------------------------------------
+
+Create src/components/category/ListCategory.js:
 
 ```javascript
 import React from "react";
@@ -39,9 +93,19 @@ function ListCategory() {
 export default ListCategory;
 ```
 
-### Step 3: Register route
 
-Add an entry to `PROTECTED_ROUTES` in `src/config/routes.js`:
+Step 3: Register the route and sidebar entry
+--------------------------------------------
+
+In src/config/routes.js:
+
+1. Import the new component:
+
+```javascript
+import ListCategory from "../components/category/ListCategory";
+```
+
+2. Add a new object to PROTECTED_ROUTES:
 
 ```javascript
 {
@@ -49,29 +113,60 @@ Add an entry to `PROTECTED_ROUTES` in `src/config/routes.js`:
     permission: "categories.view",
     sidebar: {
         label: "Category Management",
-        icon: "\u{1F4C1}",
+        icon: "📁",
     },
     Component: ListCategory,
 },
 ```
 
-The router (`src/index.js`) and sidebar read from this config automatically.
+The router and sidebar will pick it up automatically.
 
-### Step 4: Backend
 
-Ensure Laravel exposes:
+Step 4: Make the backend API match
+----------------------------------
 
-- `GET/POST /api/categories`
-- `GET/PUT/DELETE /api/categories/{id}`
-- DataTables-compatible `GET /api/categories` response
-- Optional `GET /api/.../options` for select fields
+The frontend expects the backend to support these endpoints:
+
+- GET /api/categories
+- POST /api/categories
+- GET /api/categories/{id}
+- PUT /api/categories/{id}
+- DELETE /api/categories/{id}
+
+Also make sure:
+- The list endpoint returns a DataTables-compatible response.
+- The create/update endpoints validate the incoming data.
+- Permissions used in the config exist in the backend and in your roles.
+- If you use dropdowns, the options endpoint exists and returns data in a shape expected by the form.
+
+
+What usually does not need changes
+----------------------------------
+
+You normally do not need to edit:
+- src/components/crud/CrudPage.js
+- src/components/crud/CrudFormModal.js
+- src/components/crud/crudUtils.js
+
+These are shared and already support standard CRUD behavior such as:
+- search
+- create/edit modal
+- delete confirmation
+- action buttons
+- permission-based display
+
+Only change them if you need a completely custom UI behavior.
 
 
 Checklist
 ---------
 
-1. Copy and edit a CRUD config in `src/crud/`
-2. Add `List*.js` wrapper in `src/components/<entity>/`
-3. Add route entry in `src/config/routes.js`
-4. Add matching Laravel API routes and permissions
-5. Run `npm test` and `npm run build`
+1. Copy a CRUD config from src/crud/ and rename it for the new entity.
+2. Update title, entityName, apiEndpoint, permissions, tableColumns, and fields.
+3. Create a List<Entity>.js wrapper in src/components/<entity>/.
+4. Import the component and add a protected route in src/config/routes.js.
+5. Add matching Laravel API routes, controller/repository logic, validation, and permissions.
+6. Run npm test and npm run build.
+
+
+

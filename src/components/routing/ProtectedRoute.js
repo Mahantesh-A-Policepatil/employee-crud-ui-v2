@@ -1,10 +1,9 @@
 import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import { getDefaultAccessibleRoute } from "../../config/routes";
+import { Navigate } from "react-router-dom";
+import ForbiddenPage from "../common/ForbiddenPage";
 import { useAuth } from "../../contexts/AuthContext";
 
 function ProtectedRoute({ children, permission }) {
-    const location = useLocation();
     const { isAuthenticated, isCheckingAuth, hasPermission } = useAuth();
 
     if (isCheckingAuth) {
@@ -22,11 +21,7 @@ function ProtectedRoute({ children, permission }) {
     }
 
     if (permission && !hasPermission(permission)) {
-        const fallbackRoute = getDefaultAccessibleRoute(hasPermission);
-
-        if (fallbackRoute !== location.pathname) {
-            return <Navigate to={fallbackRoute} replace />;
-        }
+        return <ForbiddenPage />;
     }
 
     return children;
