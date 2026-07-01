@@ -305,7 +305,7 @@ function CrudPage({ config }) {
                             : "";
 
                         return editButton || deleteButton
-                            ? `${editButton}${deleteButton}`
+                            ? `<div class="action-buttons-group">${editButton}${deleteButton}</div>`
                             : '<span class="text-muted">View only</span>';
                     },
                 },
