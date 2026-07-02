@@ -664,6 +664,65 @@ code {
   cursor: pointer;
 }
 
+.project-expand-cell {
+  width: 44px;
+  text-align: center !important;
+}
+
+.project-expand-button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.project-employees-panel,
+.project-empty-employees {
+  margin: 0.6rem;
+  padding: 1rem;
+  border-left: 4px solid var(--primary);
+  border-radius: 7px;
+  background: var(--surface-muted);
+}
+
+.project-employees-title {
+  margin-bottom: 0.65rem;
+  font-weight: 750;
+}
+
+.project-employees-table {
+  margin: 0;
+}
+
+.project-employees-table thead th {
+  background: #e8eefc;
+  color: var(--text);
+}
+
+.crud-multi-select-menu {
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+.crud-multi-select-menu .dropdown-item {
+    align-items: flex-start;
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.55rem 0.75rem 0.55rem 2rem;
+    white-space: normal;
+}
+
+.crud-multi-select-menu .dropdown-item:active {
+    background-color: var(--bs-dropdown-link-hover-bg);
+    color: var(--bs-dropdown-link-color);
+}
+
 .crud-field {
   margin-bottom: 0.75rem;
 }

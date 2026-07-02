@@ -11,6 +11,43 @@ import CrudFeedbackModal from "./CrudFeedbackModal";
 import CrudFormModal from "./CrudFormModal";
 import { createEmptyForm, formatValidationErrors, validateForm } from "./crudUtils";
 
+function escapeHtml(value) {
+    return $("<div>").text(value ?? "").html();
+}
+
+function getNestedValue(record, path) {
+    return path.split(".").reduce((value, key) => value?.[key], record);
+}
+
+function expandablePanel(records = [], expandableConfig) {
+    if (!records.length) {
+        return `<div class="project-empty-employees">${escapeHtml(expandableConfig.emptyMessage)}</div>`;
+    }
+
+    const headings = expandableConfig.columns
+        .map((column) => `<th>${escapeHtml(column.title)}</th>`)
+        .join("");
+    const rows = records.map((record) => `
+        <tr>
+            ${expandableConfig.columns.map((column) => (
+                `<td>${escapeHtml(getNestedValue(record, column.data) ?? column.fallback ?? "")}</td>`
+            )).join("")}
+        </tr>
+    `).join("");
+
+    return `
+        <div class="project-employees-panel">
+            <div class="project-employees-title">${escapeHtml(expandableConfig.title)}</div>
+            <div class="table-responsive">
+                <table class="table table-sm project-employees-table">
+                    <thead><tr>${headings}</tr></thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>
+        </div>
+    `;
+}
+
 function CrudPage({ config }) {
     const { hasPermission } = useAuth();
     const configRef = useRef(config);
@@ -204,7 +241,7 @@ function CrudPage({ config }) {
         }
 
         const optionFields = config.fields.filter(
-            (field) => ["select", "checkbox-group"].includes(field.type) && field.optionsEndpoint
+            (field) => ["select", "multi-select", "checkbox-group"].includes(field.type) && field.optionsEndpoint
         );
 
         optionFields.forEach((field) => {
@@ -279,6 +316,15 @@ function CrudPage({ config }) {
                 });
             },
             columns: [
+                ...(currentConfig.expandableRows ? [{
+                    data: null,
+                    orderable: false,
+                    searchable: false,
+                    className: "project-expand-cell",
+                    render: () => (
+                        '<button class="project-expand-button crud-expand" type="button" aria-label="Expand row" aria-expanded="false">+</button>'
+                    ),
+                }] : []),
                 ...currentConfig.tableColumns,
                 {
                     data: currentConfig.idField || "id",
@@ -312,6 +358,19 @@ function CrudPage({ config }) {
             ],
         });
 
+        $(tableElement).on("click", ".crud-expand", function () {
+            const button = $(this);
+            const row = dataTable.current.row(button.closest("tr"));
+
+            if (row.child.isShown()) {
+                row.child.hide();
+                button.text("+").attr("aria-expanded", "false");
+            } else {
+                row.child(expandablePanel(row.data().employees, currentConfig.expandableRows)).show();
+                button.text("−").attr("aria-expanded", "true");
+            }
+        });
+
         $(tableElement).on("click", ".crud-edit", function () {
             openEditModalRef.current($(this).data("id"));
         });
@@ -329,6 +388,7 @@ function CrudPage({ config }) {
         });
 
         return () => {
+            $(tableElement).off("click", ".crud-expand");
             $(tableElement).off("click", ".crud-edit");
             $(tableElement).off("click", ".crud-delete");
             dataTable.current?.destroy();
@@ -385,6 +445,7 @@ function CrudPage({ config }) {
                         <table className="table table-bordered crud-table" ref={tableRef}>
                             <thead>
                                 <tr>
+                                    {config.expandableRows && <th aria-label="Expand"></th>}
                                     {config.tableColumns.map((column) => (
                                         <th key={column.data}>{column.title}</th>
                                     ))}

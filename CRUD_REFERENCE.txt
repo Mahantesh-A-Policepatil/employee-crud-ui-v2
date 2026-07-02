@@ -136,7 +136,10 @@ The frontend expects the backend to support these endpoints:
 Also make sure:
 - The list endpoint returns a DataTables-compatible response.
 - The create/update endpoints validate the incoming data.
-- Permissions used in the config exist in the backend and in your roles.
+- Permissions used in the config exist in the backend permission table. Role
+  Management reads that table dynamically and automatically displays a checkbox
+  group for each CRUD permission prefix (for example, categories.view,
+  categories.create, categories.update, and categories.delete).
 - If you use dropdowns, the options endpoint exists and returns data in a shape expected by the form.
 
 
@@ -167,6 +170,5 @@ Checklist
 4. Import the component and add a protected route in src/config/routes.js.
 5. Add matching Laravel API routes, controller/repository logic, validation, and permissions.
 6. Run npm test and npm run build.
-
 
 

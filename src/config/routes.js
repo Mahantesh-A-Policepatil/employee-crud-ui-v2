@@ -5,6 +5,7 @@ import ListDepartment from "../components/department/ListDepartment";
 import ListEmployee from "../components/employee/ListEmployee";
 import ListRole from "../components/role/ListRole";
 import ListUserRole from "../components/userRole/ListUserRole";
+import ListProject from "../components/project/ListProject";
 import UserSettings from "../components/user/UserSettings";
 
 export const PROTECTED_ROUTES = [
@@ -16,6 +17,15 @@ export const PROTECTED_ROUTES = [
             icon: "\u{1F4BC}",
         },
         Component: ListEmployee,
+    },
+    {
+        path: "/projects",
+        permission: "projects.view",
+        sidebar: {
+            label: "Project Management",
+            icon: "\u{1F4C1}",
+        },
+        Component: ListProject,
     },
     {
         path: "/departments",

@@ -48,6 +48,45 @@ function CrudFormModal({
                                                 </option>
                                             ))}
                                         </select>
+                                    ) : field.type === "multi-select" ? (
+                                        <div className="dropdown crud-multi-select" data-bs-auto-close="outside">
+                                            <button
+                                                className={`form-select text-start ${errors[field.name] ? "is-invalid" : ""}`}
+                                                type="button"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                                disabled={loading || field.disabled}
+                                            >
+                                                {(form[field.name] || []).length
+                                                    ? `${(form[field.name] || []).length} employee${(form[field.name] || []).length === 1 ? "" : "s"} selected`
+                                                    : field.placeholder || `Select ${field.label}`}
+                                            </button>
+                                            <div className="dropdown-menu w-100 p-2 crud-multi-select-menu">
+                                                {(selectOptions[field.name] || field.options || []).length ? (
+                                                    (selectOptions[field.name] || field.options || []).map((option) => (
+                                                        <label className="dropdown-item form-check mb-0" key={option.value}>
+                                                            <input
+                                                                className="form-check-input"
+                                                                type="checkbox"
+                                                                name={field.name}
+                                                                value={option.value}
+                                                                checked={(form[field.name] || []).map(String).includes(String(option.value))}
+                                                                onChange={onChange}
+                                                                disabled={loading || field.disabled}
+                                                            />
+                                                            <span className="form-check-label">
+                                                                <span>{option.label}</span>
+                                                                {option.description && (
+                                                                    <small className="d-block text-muted">Currently: {option.description}</small>
+                                                                )}
+                                                            </span>
+                                                        </label>
+                                                    ))
+                                                ) : (
+                                                    <div className="text-muted px-2 py-1">No employees available.</div>
+                                                )}
+                                            </div>
+                                        </div>
                                     ) : field.type === "checkbox-group" ? (
                                         <div className={`permission-checklist ${field.grouped ? "permission-checklist-grouped" : ""} ${errors[field.name] ? "is-invalid" : ""}`}>
                                             {(selectOptions[field.name] || field.options || []).map((optionGroup) => (

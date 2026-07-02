@@ -10,14 +10,19 @@ const employeeCrudConfig = {
         delete: "employees.delete",
     },
     tableColumns: [
-        { data: "id", title: "ID" },
-        { data: "department_name", title: "Department" },
         { data: "name", title: "Name" },
-        { data: "email", title: "Email" },
-        { data: "phone", title: "Phone", type: "string" },
+        { data: "department_name", title: "Department" },
+        { data: "project_name", title: "Project" },
         { data: "designation", title: "Designation" },
+        { data: "phone", title: "Phone", type: "string" },
+        { data: "email", title: "Email" },
     ],
     fields: [
+        {
+            name: "name",
+            label: "Name",
+            required: true,
+        },
         {
             name: "department_id",
             label: "Department",
@@ -26,17 +31,15 @@ const employeeCrudConfig = {
             optionsEndpoint: "/departments/options",
         },
         {
-            name: "name",
-            label: "Name",
-            required: true,
+            name: "project_id",
+            label: "Project",
+            type: "select",
+            optionsEndpoint: "/projects/options",
         },
         {
-            name: "email",
-            label: "Email",
-            type: "email",
+            name: "designation",
+            label: "Designation",
             required: true,
-            pattern: /^\S+@\S+\.\S+$/,
-            patternMessage: "Invalid email",
         },
         {
             name: "phone",
@@ -46,9 +49,12 @@ const employeeCrudConfig = {
             patternMessage: "Must be 10 digits",
         },
         {
-            name: "designation",
-            label: "Designation",
+            name: "email",
+            label: "Email",
+            type: "email",
             required: true,
+            pattern: /^\S+@\S+\.\S+$/,
+            patternMessage: "Invalid email",
         },
     ],
 };
