@@ -219,6 +219,7 @@ code {
   border-collapse: separate !important;
   border-spacing: 0;
   border-radius: 8px;
+  border: 1px solid var(--border) !important;
   border-color: var(--border) !important;
   overflow: hidden;
 }
@@ -250,13 +251,22 @@ code {
 .crud-table tbody tr:last-child td:first-child,
 .employee-table tbody tr:last-child td:first-child,
 .dataTable tbody tr:last-child td:first-child {
+  border-bottom: 1px solid var(--border) !important;
   border-bottom-left-radius: 8px;
 }
 
 .crud-table tbody tr:last-child td:last-child,
 .employee-table tbody tr:last-child td:last-child,
 .dataTable tbody tr:last-child td:last-child {
+  border-bottom: 1px solid var(--border) !important;
   border-bottom-right-radius: 8px;
+}
+
+.crud-table tbody tr:last-child td,
+.employee-table tbody tr:last-child td,
+.dataTable tbody tr:last-child td,
+.dataTable tbody td.dt-empty {
+  border-bottom: 1px solid var(--border) !important;
 }
 
 .crud-table thead th *,
