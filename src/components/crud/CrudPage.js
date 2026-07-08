@@ -39,7 +39,7 @@ function expandablePanel(records = [], expandableConfig) {
         <div class="project-employees-panel">
             <div class="project-employees-title">${escapeHtml(expandableConfig.title)}</div>
             <div class="table-responsive">
-                <table class="table table-sm project-employees-table">
+                <table class="table table-sm project-employees-table bdr">
                     <thead><tr>${headings}</tr></thead>
                     <tbody>${rows}</tbody>
                 </table>

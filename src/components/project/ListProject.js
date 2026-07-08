@@ -34,7 +34,7 @@ function employeePanel(employees = []) {
 
     return `
         <div class="project-employees-panel">
-            <div class="project-employees-title">Assigned Employees</div>
+            <div class="project-employees-title">Project Team Members</div>
             <div class="table-responsive">
                 <table class="table table-sm project-employees-table">
                     <thead><tr><th>Name</th><th>Email</th><th>Designation</th><th>Department</th></tr></thead>
