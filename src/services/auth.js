@@ -4,7 +4,7 @@ export const AUTH_STORAGE_KEY = "employee_auth";
  * @returns {string[]} Permission names for the given auth payload.
  */
 export function getUserPermissions(auth) {
-    return auth?.user?.permissions || [];
+  return auth?.user?.permissions || [];
 }
 
 /**
@@ -13,11 +13,25 @@ export function getUserPermissions(auth) {
  * @returns {boolean}
  */
 export function hasPermission(permission, auth) {
-    if (!permission) {
-        return true;
-    }
+  if (!permission) {
+    return true;
+  }
 
-    return getUserPermissions(auth).includes(permission);
+  const permissions = getUserPermissions(auth);
+
+  if (permissions.includes(permission)) {
+    return true;
+  }
+
+  if (permission.endsWith(".view")) {
+    return permissions.includes(permission.replace(/\.view$/, ".read"));
+  }
+
+  if (permission.endsWith(".read")) {
+    return permissions.includes(permission.replace(/\.read$/, ".view"));
+  }
+
+  return false;
 }
 
 /**
@@ -26,12 +40,12 @@ export function hasPermission(permission, auth) {
  * @returns {Object|null}
  */
 export function getStoredAuth() {
-    try {
-        const raw = localStorage.getItem(AUTH_STORAGE_KEY);
-        return raw ? JSON.parse(raw) : null;
-    } catch (error) {
-        return null;
-    }
+  try {
+    const raw = localStorage.getItem(AUTH_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (error) {
+    return null;
+  }
 }
 
 /**
@@ -40,12 +54,12 @@ export function getStoredAuth() {
  * @param {Object} auth
  */
 export function setStoredAuth(auth) {
-    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(auth));
+  localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(auth));
 }
 
 /**
  * Remove the persisted authentication payload.
  */
 export function clearStoredAuth() {
-    localStorage.removeItem(AUTH_STORAGE_KEY);
+  localStorage.removeItem(AUTH_STORAGE_KEY);
 }

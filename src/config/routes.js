@@ -6,66 +6,76 @@ import ListEmployee from "../components/employee/ListEmployee";
 import ListRole from "../components/role/ListRole";
 import ListUserRole from "../components/userRole/ListUserRole";
 import ListProject from "../components/project/ListProject";
+import ListAttendance from "../components/attendance/ListAttendance";
 import UserSettings from "../components/user/UserSettings";
 
 export const PROTECTED_ROUTES = [
-    {
-        path: "/",
-        permission: "employees.view",
-        sidebar: {
-            label: "Employee Management",
-            icon: "\u{1F4BC}",
-        },
-        Component: ListEmployee,
+  {
+    path: "/",
+    permission: "employees.view",
+    sidebar: {
+      label: "Employee Management",
+      icon: "💼",
     },
-    {
-        path: "/projects",
-        permission: "projects.view",
-        sidebar: {
-            label: "Project Management",
-            icon: "\u{1F4C1}",
-        },
-        Component: ListProject,
+    Component: ListEmployee,
+  },
+  {
+    path: "/attendance",
+    permission: "attendance.view",
+    sidebar: {
+      label: "Attendance Management",
+      icon: "📅",
     },
-    {
-        path: "/departments",
-        permission: "departments.view",
-        sidebar: {
-            label: "Department Management",
-            icon: "\u{1F3E2}",
-        },
-        Component: ListDepartment,
+    Component: ListAttendance,
+  },
+  {
+    path: "/projects",
+    permission: "projects.view",
+    sidebar: {
+      label: "Project Management",
+      icon: "📁",
     },
-    {
-        path: "/roles",
-        permission: "roles.view",
-        sidebar: {
-            label: "Role Management",
-            icon: "\u{1F511}",
-        },
-        Component: ListRole,
+    Component: ListProject,
+  },
+  {
+    path: "/departments",
+    permission: "departments.view",
+    sidebar: {
+      label: "Department Management",
+      icon: "🏢",
     },
-    {
-        path: "/user-roles",
-        permission: "roles.manage",
-        sidebar: {
-            label: "User Role Assignment",
-            icon: "\u{2713}",
-        },
-        Component: ListUserRole,
+    Component: ListDepartment,
+  },
+  {
+    path: "/roles",
+    permission: "roles.view",
+    sidebar: {
+      label: "Role Management",
+      icon: "🔑",
     },
-    {
-        path: "/settings",
-        permission: null,
-        sidebar: null,
-        Component: UserSettings,
+    Component: ListRole,
+  },
+  {
+    path: "/user-roles",
+    permission: "roles.manage",
+    sidebar: {
+      label: "User Role Assignment",
+      icon: "✓",
     },
+    Component: ListUserRole,
+  },
+  {
+    path: "/settings",
+    permission: null,
+    sidebar: null,
+    Component: UserSettings,
+  },
 ];
 
 export const PUBLIC_ROUTES = [
-    { path: "/login", Component: Login },
-    { path: "/register", Component: Register },
-    { path: "/forgot-password", Component: ForgotPassword },
+  { path: "/login", Component: Login },
+  { path: "/register", Component: Register },
+  { path: "/forgot-password", Component: ForgotPassword },
 ];
 
 /**
@@ -73,18 +83,18 @@ export const PUBLIC_ROUTES = [
  * @returns {string}
  */
 export function getDefaultAccessibleRoute(hasPermission) {
-    const match = PROTECTED_ROUTES.find(
-        (route) => route.permission && hasPermission(route.permission)
-    );
+  const match = PROTECTED_ROUTES.find(
+    (route) => route.permission && hasPermission(route.permission),
+  );
 
-    return match?.path || "/settings";
+  return match?.path || "/settings";
 }
 
 /**
  * @param {(permission: string) => boolean} hasPermission
  */
 export function getSidebarRoutes(hasPermission) {
-    return PROTECTED_ROUTES.filter(
-        (route) => route.sidebar && hasPermission(route.permission)
-    );
+  return PROTECTED_ROUTES.filter(
+    (route) => route.sidebar && hasPermission(route.permission),
+  );
 }

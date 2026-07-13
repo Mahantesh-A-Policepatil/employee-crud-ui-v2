@@ -1,107 +1,125 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import apiClient from "../api/apiClient";
 import {
-    clearStoredAuth,
-    getStoredAuth,
-    getUserPermissions,
-    setStoredAuth,
+  clearStoredAuth,
+  getStoredAuth,
+  getUserPermissions,
+  hasPermission as userHasPermission,
+  setStoredAuth,
 } from "../services/auth";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-    const [auth, setAuth] = useState(() => getStoredAuth());
-    const [isCheckingAuth, setIsCheckingAuth] = useState(Boolean(getStoredAuth()?.token));
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [auth, setAuth] = useState(() => getStoredAuth());
+  const [isCheckingAuth, setIsCheckingAuth] = useState(
+    Boolean(getStoredAuth()?.token),
+  );
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    useEffect(() => {
-        const token = auth?.token;
+  useEffect(() => {
+    const token = auth?.token;
 
-        if (!token) {
-            setIsCheckingAuth(false);
-            setIsAuthenticated(false);
-            return;
-        }
+    if (!token) {
+      setIsCheckingAuth(false);
+      setIsAuthenticated(false);
+      return;
+    }
 
-        setIsCheckingAuth(true);
+    setIsCheckingAuth(true);
 
-        apiClient
-            .get("/user")
-            .then((response) => {
-                const nextAuth = { token, user: response.data };
-                setStoredAuth(nextAuth);
-                setAuth(nextAuth);
-                setIsAuthenticated(true);
-            })
-            .catch(() => {
-                clearStoredAuth();
-                setAuth(null);
-                setIsAuthenticated(false);
-            })
-            .finally(() => {
-                setIsCheckingAuth(false);
-            });
-    }, [auth?.token]);
-
-    const login = useCallback((authPayload) => {
-        setStoredAuth(authPayload);
-        setAuth(authPayload);
+    apiClient
+      .get("/user")
+      .then((response) => {
+        const nextAuth = { token, user: response.data };
+        setStoredAuth(nextAuth);
+        setAuth(nextAuth);
         setIsAuthenticated(true);
-        setIsCheckingAuth(false);
-    }, []);
-
-    const logout = useCallback(() => {
+      })
+      .catch(() => {
         clearStoredAuth();
         setAuth(null);
         setIsAuthenticated(false);
-    }, []);
+      })
+      .finally(() => {
+        setIsCheckingAuth(false);
+      });
+  }, [auth?.token]);
 
-    const updateUser = useCallback((user) => {
-        setAuth((current) => {
-            if (!current?.token) {
-                return current;
-            }
+  const login = useCallback((authPayload) => {
+    setStoredAuth(authPayload);
+    setAuth(authPayload);
+    setIsAuthenticated(true);
+    setIsCheckingAuth(false);
+  }, []);
 
-            const nextAuth = { token: current.token, user };
-            setStoredAuth(nextAuth);
-            return nextAuth;
-        });
-    }, []);
+  const logout = useCallback(() => {
+    clearStoredAuth();
+    setAuth(null);
+    setIsAuthenticated(false);
+  }, []);
 
-    const hasPermission = useCallback(
-        (permission) => {
-            if (!permission) {
-                return true;
-            }
+  const updateUser = useCallback((user) => {
+    setAuth((current) => {
+      if (!current?.token) {
+        return current;
+      }
 
-            return getUserPermissions(auth).includes(permission);
-        },
-        [auth]
-    );
+      const nextAuth = { token: current.token, user };
+      setStoredAuth(nextAuth);
+      return nextAuth;
+    });
+  }, []);
 
-    const value = useMemo(
-        () => ({
-            user: auth?.user ?? null,
-            token: auth?.token ?? null,
-            isAuthenticated,
-            isCheckingAuth,
-            login,
-            logout,
-            updateUser,
-            hasPermission,
-        }),
-        [auth, isAuthenticated, isCheckingAuth, login, logout, updateUser, hasPermission]
-    );
+  const hasPermission = useCallback(
+    (permission) => {
+      if (!permission) {
+        return true;
+      }
 
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+      return userHasPermission(permission, auth);
+    },
+    [auth],
+  );
+
+  const value = useMemo(
+    () => ({
+      user: auth?.user ?? null,
+      token: auth?.token ?? null,
+      isAuthenticated,
+      isCheckingAuth,
+      login,
+      logout,
+      updateUser,
+      hasPermission,
+    }),
+    [
+      auth,
+      isAuthenticated,
+      isCheckingAuth,
+      login,
+      logout,
+      updateUser,
+      hasPermission,
+    ],
+  );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
-    const context = useContext(AuthContext);
+  const context = useContext(AuthContext);
 
-    if (!context) {
-        throw new Error("useAuth must be used within AuthProvider");
-    }
+  if (!context) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
 
-    return context;
+  return context;
 }

@@ -231,9 +231,17 @@ code {
   --bs-table-color: #ffffff;
   background: #667eea !important;
   color: #ffffff !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.35) !important;
+  border-bottom: 1px solid var(--border) !important;
   font-size: 0.82rem;
   font-weight: 750;
   vertical-align: middle;
+}
+
+.crud-table thead th:last-child,
+.employee-table thead th:last-child,
+.dataTable thead th:last-child {
+  border-right: 0 !important;
 }
 
 .crud-table thead th:first-child,
@@ -279,8 +287,16 @@ code {
 .crud-table tbody td,
 .employee-table tbody td,
 .dataTable tbody td {
+  border-right: 1px solid var(--border) !important;
+  border-bottom: 1px solid var(--border) !important;
   vertical-align: middle;
   color: #1f2937;
+}
+
+.crud-table tbody td:last-child,
+.employee-table tbody td:last-child,
+.dataTable tbody td:last-child {
+  border-right: 0 !important;
 }
 
 .crud-table th,
@@ -620,6 +636,10 @@ code {
   box-shadow: var(--shadow-md);
 }
 
+.crud-form-dialog {
+  max-width: min(920px, calc(100vw - 2rem));
+}
+
 .modal-header {
   border-bottom: 0;
   border-radius: 8px 8px 0 0;
@@ -768,6 +788,59 @@ code {
 
 .crud-field {
   margin-bottom: 0.75rem;
+}
+
+.crud-selected-table {
+  margin-top: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.crud-selected-table-title {
+  padding: 0.55rem 0.7rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-muted);
+  color: var(--text);
+  font-size: 0.86rem;
+  font-weight: 750;
+}
+
+.crud-selected-records-table {
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.crud-selected-records-table th {
+  background: #eef4ff;
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.crud-selected-records-table th,
+.crud-selected-records-table td {
+  padding: 0.5rem 0.6rem;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.crud-selected-records-table th:last-child,
+.crud-selected-records-table td:last-child {
+  border-right: 0;
+}
+
+.crud-selected-records-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.crud-selected-table-empty {
+  padding: 0.65rem 0.7rem;
+  color: var(--muted);
+  font-size: 0.86rem;
 }
 
 .permission-checklist {
