@@ -132,6 +132,7 @@ function CrudPage({ config }) {
       link.click();
 
       link.remove();
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       showFeedback({
         type: "error",
@@ -478,13 +479,6 @@ function CrudPage({ config }) {
       dataTable.current = null;
     };
   }, [canView, hasPermission, isForbidden]);
-
-  console.log("========== CRUD DEBUG ==========");
-  console.log(config);
-  console.log("tableColumns:", config?.tableColumns);
-  console.log("fields:", config?.fields);
-  console.log("permissions:", config?.permissions);
-  console.log("===============================");
 
   const shouldShowForbidden = !canView || isForbidden;
 

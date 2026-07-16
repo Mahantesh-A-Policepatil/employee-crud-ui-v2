@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Modal } from "bootstrap";
 import attendanceService from "../../services/attendanceService";
 import { getSafeApiErrorMessage } from "../../api/apiClient";
 
@@ -22,7 +23,7 @@ function AttendanceUploadModal({ modalRef, onSuccess }) {
 
   const [month, setMonth] = useState(new Date().getMonth() + 1);
 
-  const [year] = useState(new Date().getFullYear());
+  const [year, setYear] = useState(new Date().getFullYear());
 
   const [file, setFile] = useState(null);
 
@@ -30,6 +31,7 @@ function AttendanceUploadModal({ modalRef, onSuccess }) {
 
   const resetForm = () => {
     setMonth(new Date().getMonth() + 1);
+    setYear(new Date().getFullYear());
     setFile(null);
     setError("");
 
@@ -67,7 +69,7 @@ function AttendanceUploadModal({ modalRef, onSuccess }) {
         onSuccess();
       }
 
-      window.bootstrap.Modal.getInstance(modalRef.current).hide();
+      Modal.getOrCreateInstance(modalRef.current).hide();
     } catch (err) {
       setError(getSafeApiErrorMessage(err, "Failed to upload attendance."));
     } finally {
@@ -110,7 +112,15 @@ function AttendanceUploadModal({ modalRef, onSuccess }) {
               <div className="mb-3">
                 <label className="form-label">Year</label>
 
-                <input className="form-control" value={year} readOnly />
+                <input
+                  className="form-control"
+                  type="number"
+                  min="2000"
+                  max="2100"
+                  value={year}
+                  onChange={(e) => setYear(e.target.value)}
+                  required
+                />
               </div>
 
               <div className="mb-3">
