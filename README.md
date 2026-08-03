@@ -31,6 +31,21 @@ npm start
 
 Open [http://localhost:3000](http://localhost:3000).
 
+## Resetting the API database
+
+From the Laravel API project, run the following command to rebuild the local
+database from every migration and execute the seeders registered in
+`DatabaseSeeder`:
+
+```bash
+cd C:\xampp\htdocs\employee-crud-api
+php artisan migrate:fresh --seed
+```
+
+> **Warning:** `migrate:fresh` drops every table in the configured database
+> before recreating it. Use it only when it is safe to discard the existing
+> local data.
+
 ## Environment variables
 
 | Variable | Description | Default |
