@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Modal } from "bootstrap";
 import attendanceService from "../../services/attendanceService";
 import { getSafeApiErrorMessage } from "../../api/apiClient";
-import ActionLoadingOverlay from "../common/ActionLoadingOverlay";
 
 const months = [
   { value: 1, label: "January" },
@@ -80,7 +79,6 @@ function AttendanceUploadModal({ modalRef, onSuccess }) {
 
   return (
     <>
-      <ActionLoadingOverlay show={loading} />
       <div className="modal fade" ref={modalRef} tabIndex="-1">
         <div className="modal-dialog">
           <div className="modal-content">

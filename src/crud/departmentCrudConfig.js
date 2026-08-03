@@ -29,6 +29,7 @@ const departmentCrudConfig = {
       name: "employee_ids",
       label: "Employees",
       type: "multi-select",
+      required: true,
       defaultValue: [],
       optionsEndpoint: "/employees/department-options",
       placeholder: "Select employees",

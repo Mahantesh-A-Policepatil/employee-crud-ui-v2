@@ -10,7 +10,6 @@ import { useAuth } from "../../contexts/AuthContext";
 import { getStoredAuth } from "../../services/auth";
 import AppLayout from "../layout/AppLayout";
 import ForbiddenPage from "../common/ForbiddenPage";
-import ActionLoadingOverlay from "../common/ActionLoadingOverlay";
 import { dataTableLoadingMarkup } from "../common/loadingMarkup";
 import CrudFeedbackModal from "./CrudFeedbackModal";
 import CrudFormModal from "./CrudFormModal";
@@ -108,11 +107,19 @@ function CrudPage({ config }) {
     Modal.getOrCreateInstance(feedbackModalRef.current).show();
   };
 
-  const reloadTable = () => {
-    setTimeout(() => {
-      dataTable.current?.ajax.reload(null, false);
-    }, 300);
-  };
+  const reloadTable = () =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        const table = dataTable.current;
+
+        if (!table) {
+          resolve();
+          return;
+        }
+
+        table.ajax.reload(resolve, false);
+      }, 300);
+    });
 
   const openUploadModal = () => {
     Modal.getOrCreateInstance(uploadModalRef.current).show();
@@ -233,7 +240,7 @@ function CrudPage({ config }) {
 
       modalInstance.hide();
       cleanupModal();
-      reloadTable();
+      await reloadTable();
       showFeedback({
         type: "success",
         title: "Success",
@@ -283,7 +290,7 @@ function CrudPage({ config }) {
       await apiClient.delete(`${config.apiEndpoint}/${id}`);
       modalInstance.hide();
       cleanupModal();
-      reloadTable();
+      await reloadTable();
       showFeedback({
         type: "success",
         title: "Success",
@@ -489,7 +496,6 @@ function CrudPage({ config }) {
 
   return (
     <AppLayout>
-      <ActionLoadingOverlay show={loading} />
       {shouldShowForbidden ? (
         <ForbiddenPage />
       ) : (

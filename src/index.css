@@ -179,6 +179,7 @@ code {
 }
 
 .table-panel {
+  position: relative;
   padding: 1rem;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -316,16 +317,39 @@ code {
 
 /* DataTables shows this while each list page fetches its first result set. */
 div.dt-processing {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 10 !important;
+  display: none !important;
+  place-items: center;
   width: auto !important;
+  height: auto !important;
   margin: 0 !important;
   padding: 0 !important;
   border: 0 !important;
-  background: transparent !important;
+  border-radius: 0 !important;
+  background: rgba(243, 246, 251, 0.9) !important;
+  box-shadow: none !important;
+  cursor: wait;
+}
+
+/* DataTables sets inline display:block only while an Ajax request is active. */
+div.dt-processing[style*="display: block"] {
+  display: grid !important;
 }
 
 /* Hide DataTables' stock four-dot renderer; the shared loader markup replaces it. */
 div.dt-processing > div:not(.loading-indicator) {
   display: none !important;
+}
+
+/* Keep the configured loader's layout identical on the initial and reload requests. */
+div.dt-processing > .loading-indicator--table {
+  display: grid !important;
+}
+
+.dt-container {
+  position: relative;
 }
 
 .dt-container .row {
@@ -967,20 +991,22 @@ div.dt-processing > div:not(.loading-indicator) {
 }
 
 .loading-indicator {
-  display: flex;
-  min-width: 132px;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.15rem;
-  padding: 1.1rem 1.4rem 0.9rem;
+  position: relative;
+  display: grid;
+  width: 220px;
+  height: 220px;
+  min-width: 0;
+  place-items: center;
+  padding: 0;
   border: 1px solid rgba(226, 232, 240, 0.88);
-  border-radius: 20px;
+  border-radius: 26px;
   background: rgba(255, 255, 255, 0.97);
   box-shadow: 0 16px 35px rgba(15, 23, 42, 0.12);
 }
 
 .loading-indicator__ring {
   position: relative;
+  grid-area: 1 / 1;
   width: 112px;
   height: 112px;
 }
@@ -1002,7 +1028,12 @@ div.dt-processing > div:not(.loading-indicator) {
 }
 
 .loading-indicator__label {
-  margin-top: -61px;
+  position: absolute;
+  right: 0;
+  bottom: 1.25rem;
+  left: 0;
+  margin: 0;
+  text-align: center;
   color: #60a5dc;
   font-size: 0.74rem;
   font-weight: 800;
@@ -1028,27 +1059,27 @@ div.dt-processing > div:not(.loading-indicator) {
 }
 
 .loading-indicator--table {
-  min-width: 112px;
-  padding: 0.7rem 0.9rem 0.55rem;
-  border-radius: 15px;
-  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.12);
+  width: 300px;
+  height: 270px;
+  border-radius: 30px;
+  box-shadow: 0 20px 46px rgba(15, 23, 42, 0.16);
 }
 
 .loading-indicator--table .loading-indicator__ring {
-  width: 76px;
-  height: 76px;
+  width: 150px;
+  height: 150px;
 }
 
 .loading-indicator--table .loading-indicator__tile {
-  width: 11px;
-  height: 18px;
-  border-radius: 3px 3px 5px 5px;
-  transform: translate(-50%, -50%) rotate(calc(var(--loader-index) * 30deg)) translateY(-29px);
+  width: 22px;
+  height: 35px;
+  border-radius: 5px 5px 9px 9px;
+  transform: translate(-50%, -50%) rotate(calc(var(--loader-index) * 30deg)) translateY(-57px);
 }
 
 .loading-indicator--table .loading-indicator__label {
-  margin-top: -42px;
-  font-size: 0.58rem;
+  bottom: 1.6rem;
+  font-size: 0.85rem;
 }
 
 .action-loading-overlay {

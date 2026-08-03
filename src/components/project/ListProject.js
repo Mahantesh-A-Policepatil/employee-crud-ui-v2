@@ -8,7 +8,6 @@ import { getStoredAuth } from "../../services/auth";
 import projectCrudConfig from "../../crud/projectCrudConfig";
 import AppLayout from "../layout/AppLayout";
 import ForbiddenPage from "../common/ForbiddenPage";
-import ActionLoadingOverlay from "../common/ActionLoadingOverlay";
 import { dataTableLoadingMarkup } from "../common/loadingMarkup";
 import CrudFeedbackModal from "../crud/CrudFeedbackModal";
 import CrudFormModal from "../crud/CrudFormModal";
@@ -76,7 +75,18 @@ function ListProject() {
         Modal.getOrCreateInstance(feedbackModalRef.current).show();
     };
 
-    const reloadTable = () => setTimeout(() => dataTable.current?.ajax.reload(null, false), 300);
+    const reloadTable = () => new Promise((resolve) => {
+        setTimeout(() => {
+            const table = dataTable.current;
+
+            if (!table) {
+                resolve();
+                return;
+            }
+
+            table.ajax.reload(resolve, false);
+        }, 300);
+    });
 
     const openCreateModal = () => {
         setForm(createEmptyForm(config.fields));
@@ -151,7 +161,7 @@ function ListProject() {
             }
             Modal.getOrCreateInstance(modalRef.current).hide();
             cleanupModal();
-            reloadTable();
+            await reloadTable();
             showFeedback({
                 type: "success", title: "Success", color: "success", action: null,
                 message: `Project ${isEdit ? "updated" : "created"} successfully`,
@@ -175,7 +185,7 @@ function ListProject() {
             await apiClient.delete(`${config.apiEndpoint}/${id}`);
             Modal.getOrCreateInstance(feedbackModalRef.current).hide();
             cleanupModal();
-            reloadTable();
+            await reloadTable();
             showFeedback({
                 type: "success", title: "Success", color: "success", action: null,
                 message: "Project deleted successfully",
@@ -281,7 +291,6 @@ function ListProject() {
 
     return (
         <AppLayout>
-            <ActionLoadingOverlay show={loading} />
             {!canView || isForbidden ? <ForbiddenPage /> : <>
                 <div className="page-title-row"><h1>{config.title}</h1></div>
                 <div className="table-panel">
