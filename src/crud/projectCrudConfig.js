@@ -4,7 +4,7 @@ const projectCrudConfig = {
   apiEndpoint: "/projects",
   idField: "id",
   permissions: {
-    view: "projects.view",
+    view: "projects.read",
     create: "projects.create",
     update: "projects.update",
     delete: "projects.delete",

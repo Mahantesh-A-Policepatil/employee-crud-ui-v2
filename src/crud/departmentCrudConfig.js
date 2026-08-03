@@ -4,7 +4,7 @@ const departmentCrudConfig = {
   apiEndpoint: "/departments",
   idField: "id",
   permissions: {
-    view: "departments.view",
+    view: "departments.read",
     create: "departments.create",
     update: "departments.update",
     delete: "departments.delete",

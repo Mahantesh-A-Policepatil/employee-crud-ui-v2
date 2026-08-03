@@ -1,7 +1,7 @@
 import { getDefaultAccessibleRoute, getSidebarRoutes } from "./routes";
 
 describe("routes config", () => {
-    const hasPermission = (permission) => permission === "departments.view";
+    const hasPermission = (permission) => permission === "departments.read";
 
     test("getDefaultAccessibleRoute returns first permitted route", () => {
         expect(getDefaultAccessibleRoute(hasPermission)).toBe("/departments");

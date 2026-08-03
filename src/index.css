@@ -209,7 +209,15 @@ code {
 }
 
 .search-input {
-  width: min(260px, 100%);
+  width: min(840px, 100%);
+  height: 46px;
+  padding: 0.65rem 2.25rem 0.65rem 0.85rem;
+}
+
+.datatable-toolbar .btn {
+  min-width: 120px;
+  min-height: 46px;
+  padding: 0.65rem 1.1rem;
 }
 
 .crud-table,
@@ -943,6 +951,48 @@ div.dt-processing > .loading-indicator--table {
 
 .permission-group .permission-check {
   background: var(--surface-muted);
+}
+
+.permission-matrix {
+  gap: 0;
+  padding: 0;
+  overflow-x: auto;
+  background: #ffffff;
+}
+
+.permission-matrix .permission-group {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) repeat(4, minmax(86px, 0.35fr));
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1rem;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+}
+
+.permission-matrix .permission-group:last-child {
+  border-bottom: 0;
+}
+
+.permission-matrix .permission-group-title {
+  margin: 0;
+}
+
+.permission-matrix .permission-group-options {
+  display: contents;
+}
+
+.permission-matrix .permission-check {
+  justify-content: center;
+  min-height: 34px;
+  margin: 0;
+  padding: 0.45rem;
+  border-radius: 6px;
+}
+
+.permission-matrix .form-check-label {
+  font-size: 0.78rem;
 }
 
 .forbidden-page {

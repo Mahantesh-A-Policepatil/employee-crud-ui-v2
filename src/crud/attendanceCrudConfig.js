@@ -8,7 +8,7 @@ const attendanceCrudConfig = {
   apiEndpoint: "/attendance",
 
   permissions: {
-    view: "attendance.view",
+    view: "attendance.read",
     create: "attendance.create",
     update: "attendance.update",
     delete: "attendance.delete",

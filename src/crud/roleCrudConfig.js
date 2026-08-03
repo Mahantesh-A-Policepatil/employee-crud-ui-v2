@@ -4,10 +4,10 @@ const roleCrudConfig = {
     apiEndpoint: "/roles",
     idField: "id",
     permissions: {
-        view: "roles.view",
-        create: "roles.manage",
-        update: "roles.manage",
-        delete: "roles.manage",
+        view: "roles.read",
+        create: "roles.create",
+        update: "roles.update",
+        delete: "roles.delete",
     },
     tableColumns: [
         { data: "id", title: "ID" },
@@ -27,6 +27,7 @@ const roleCrudConfig = {
             label: "Allowed Actions",
             type: "checkbox-group",
             grouped: true,
+            permissionMatrix: true,
             defaultValue: [],
             optionsEndpoint: "/permissions/grouped-options",
         },

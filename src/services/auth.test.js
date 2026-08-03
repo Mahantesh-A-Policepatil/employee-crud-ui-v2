@@ -15,7 +15,7 @@ describe("auth service", () => {
     test("stores and reads auth payload", () => {
         const auth = {
             token: "token-123",
-            user: { name: "Jane", permissions: ["employees.view"] },
+            user: { name: "Jane", permissions: ["employees.read"] },
         };
 
         setStoredAuth(auth);
@@ -33,20 +33,21 @@ describe("auth service", () => {
     test("checks permissions from auth payload", () => {
         const auth = {
             token: "token-123",
-            user: { permissions: ["departments.view", "roles.view"] },
+            user: { permissions: ["departments.read", "roles.read"] },
         };
 
+        expect(hasPermission("departments.read", auth)).toBe(true);
         expect(hasPermission("departments.view", auth)).toBe(true);
-        expect(hasPermission("employees.view", auth)).toBe(false);
+        expect(hasPermission("employees.read", auth)).toBe(false);
         expect(hasPermission(null, auth)).toBe(true);
     });
 
     test("returns user permissions", () => {
         const auth = {
-            user: { permissions: ["employees.view"] },
+            user: { permissions: ["employees.read"] },
         };
 
-        expect(getUserPermissions(auth)).toEqual(["employees.view"]);
+        expect(getUserPermissions(auth)).toEqual(["employees.read"]);
         expect(getUserPermissions(null)).toEqual([]);
     });
 });

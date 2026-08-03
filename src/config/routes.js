@@ -12,7 +12,7 @@ import UserSettings from "../components/user/UserSettings";
 export const PROTECTED_ROUTES = [
   {
     path: "/",
-    permission: "employees.view",
+    permission: "employees.read",
     sidebar: {
       label: "Employee Management",
       icon: "💼",
@@ -21,7 +21,7 @@ export const PROTECTED_ROUTES = [
   },
   {
     path: "/attendance",
-    permission: "attendance.view",
+    permission: "attendance.read",
     sidebar: {
       label: "Attendance Management",
       icon: "📅",
@@ -30,7 +30,7 @@ export const PROTECTED_ROUTES = [
   },
   {
     path: "/projects",
-    permission: "projects.view",
+    permission: "projects.read",
     sidebar: {
       label: "Project Management",
       icon: "📁",
@@ -39,7 +39,7 @@ export const PROTECTED_ROUTES = [
   },
   {
     path: "/departments",
-    permission: "departments.view",
+    permission: "departments.read",
     sidebar: {
       label: "Department Management",
       icon: "🏢",
@@ -48,7 +48,7 @@ export const PROTECTED_ROUTES = [
   },
   {
     path: "/roles",
-    permission: "roles.view",
+    permission: "roles.read",
     sidebar: {
       label: "Role Management",
       icon: "🔑",
@@ -57,7 +57,7 @@ export const PROTECTED_ROUTES = [
   },
   {
     path: "/user-roles",
-    permission: "roles.manage",
+    permission: "user-roles.read",
     sidebar: {
       label: "User Role Assignment",
       icon: "✓",

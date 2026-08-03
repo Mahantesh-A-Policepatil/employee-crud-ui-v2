@@ -4,7 +4,7 @@ const employeeCrudConfig = {
   apiEndpoint: "/employees",
   idField: "id",
   permissions: {
-    view: "employees.view",
+    view: "employees.read",
     create: "employees.create",
     update: "employees.update",
     delete: "employees.delete",

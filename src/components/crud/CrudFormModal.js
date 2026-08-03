@@ -204,7 +204,7 @@ function CrudFormModal({
                       </div>
                     ) : field.type === "checkbox-group" ? (
                       <div
-                        className={`permission-checklist ${field.grouped ? "permission-checklist-grouped" : ""} ${errors[field.name] ? "is-invalid" : ""}`}
+                        className={`permission-checklist ${field.grouped ? "permission-checklist-grouped" : ""} ${field.permissionMatrix ? "permission-matrix" : ""} ${errors[field.name] ? "is-invalid" : ""}`}
                       >
                         {(selectOptions[field.name] || field.options || []).map(
                           (optionGroup) =>

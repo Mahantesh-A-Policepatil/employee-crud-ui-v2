@@ -54,9 +54,10 @@ test("shows the forbidden page when a user lacks the required permission", async
 
     apiClient.get.mockResolvedValueOnce({
         data: {
-            permissions: ["departments.view"],
+            permissions: ["departments.read"],
         },
     });
+    apiClient.get.mockResolvedValueOnce({ data: [] });
 
     render(
         <MemoryRouter initialEntries={["/roles"]}>

@@ -1,11 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { getSidebarRoutes } from "../../config/routes";
 import { useAuth } from "../../contexts/AuthContext";
 
 function Sidebar() {
-    const { hasPermission } = useAuth();
-    const sidebarRoutes = getSidebarRoutes(hasPermission);
+    const { navigation } = useAuth();
 
     return (
         <aside className="app-sidebar text-white">
@@ -16,17 +14,17 @@ function Sidebar() {
             <hr />
 
             <ul className="nav flex-column">
-                {sidebarRoutes.map((route) => (
-                    <li className="nav-item mb-2" key={route.path}>
+                {navigation.map((item) => (
+                    <li className="nav-item mb-2" key={item.key}>
                         <NavLink
-                            to={route.path}
-                            end={route.path === "/"}
+                            to={item.path}
+                            end={item.path === "/"}
                             className={({ isActive }) =>
                                 `nav-link text-white${isActive ? " active" : ""}`
                             }
                         >
-                            <span className="nav-icon" aria-hidden="true">{route.sidebar.icon}</span>
-                            <span className="nav-label">{route.sidebar.label}</span>
+                            <span className="nav-icon" aria-hidden="true">{item.icon}</span>
+                            <span className="nav-label">{item.label}</span>
                         </NavLink>
                     </li>
                 ))}

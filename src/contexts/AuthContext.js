@@ -10,7 +10,6 @@ import apiClient from "../api/apiClient";
 import {
   clearStoredAuth,
   getStoredAuth,
-  getUserPermissions,
   hasPermission as userHasPermission,
   setStoredAuth,
 } from "../services/auth";
@@ -23,6 +22,10 @@ export function AuthProvider({ children }) {
     Boolean(getStoredAuth()?.token),
   );
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [navigation, setNavigation] = useState([]);
+  const [isNavigationLoading, setIsNavigationLoading] = useState(
+    Boolean(getStoredAuth()?.token),
+  );
 
   useEffect(() => {
     const token = auth?.token;
@@ -30,6 +33,8 @@ export function AuthProvider({ children }) {
     if (!token) {
       setIsCheckingAuth(false);
       setIsAuthenticated(false);
+      setNavigation([]);
+      setIsNavigationLoading(false);
       return;
     }
 
@@ -53,6 +58,20 @@ export function AuthProvider({ children }) {
       });
   }, [auth?.token]);
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      return;
+    }
+
+    setIsNavigationLoading(true);
+
+    apiClient
+      .get("/navigation")
+      .then((response) => setNavigation(response.data))
+      .catch(() => setNavigation([]))
+      .finally(() => setIsNavigationLoading(false));
+  }, [isAuthenticated]);
+
   const login = useCallback((authPayload) => {
     setStoredAuth(authPayload);
     setAuth(authPayload);
@@ -64,6 +83,8 @@ export function AuthProvider({ children }) {
     clearStoredAuth();
     setAuth(null);
     setIsAuthenticated(false);
+    setNavigation([]);
+    setIsNavigationLoading(false);
   }, []);
 
   const updateUser = useCallback((user) => {
@@ -95,6 +116,8 @@ export function AuthProvider({ children }) {
       token: auth?.token ?? null,
       isAuthenticated,
       isCheckingAuth,
+      navigation,
+      isNavigationLoading,
       login,
       logout,
       updateUser,
@@ -104,6 +127,8 @@ export function AuthProvider({ children }) {
       auth,
       isAuthenticated,
       isCheckingAuth,
+      navigation,
+      isNavigationLoading,
       login,
       logout,
       updateUser,

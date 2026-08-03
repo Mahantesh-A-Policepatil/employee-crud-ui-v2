@@ -7,7 +7,7 @@ import { clearStoredAuth } from "../../services/auth";
 const LOGIN_FAILED_MESSAGE = "Login failed. Please check your email and password.";
 
 function Login() {
-    const { isAuthenticated, login } = useAuth();
+    const { isAuthenticated, isNavigationLoading, login, navigation } = useAuth();
     const [form, setForm] = useState({ email: "", password: "" });
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
@@ -47,7 +47,11 @@ function Login() {
     };
 
     if (isAuthenticated) {
-        return <Navigate to="/" replace />;
+        if (isNavigationLoading) {
+            return null;
+        }
+
+        return <Navigate to={navigation[0]?.path || "/"} replace />;
     }
 
     return (

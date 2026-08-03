@@ -44,14 +44,15 @@ describe("ForbiddenPage", () => {
     test("links back to the first accessible route", async () => {
         apiClient.get.mockResolvedValueOnce({
             data: {
-                permissions: ["departments.view"],
+                permissions: ["departments.read"],
             },
         });
+        apiClient.get.mockResolvedValueOnce({ data: [] });
 
         setStoredAuth({
             token: "token",
             user: {
-                permissions: ["departments.view"],
+                permissions: ["departments.read"],
             },
         });
 

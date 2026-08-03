@@ -4,10 +4,10 @@ const userRoleCrudConfig = {
     apiEndpoint: "/user-roles",
     idField: "id",
     permissions: {
-        view: "roles.manage",
-        create: "roles.manage",
-        update: "roles.manage",
-        delete: "roles.manage",
+        view: "user-roles.read",
+        create: "user-roles.create",
+        update: "user-roles.update",
+        delete: "user-roles.delete",
     },
     tableColumns: [
         { data: "id", title: "ID" },
