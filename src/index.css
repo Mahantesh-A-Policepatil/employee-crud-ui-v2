@@ -314,6 +314,20 @@ code {
   background: #f6f9ff;
 }
 
+/* DataTables shows this while each list page fetches its first result set. */
+div.dt-processing {
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+/* Hide DataTables' stock four-dot renderer; the shared loader markup replaces it. */
+div.dt-processing > div:not(.loading-indicator) {
+  display: none !important;
+}
+
 .dt-container .row {
   row-gap: 0.75rem;
 }
@@ -674,10 +688,6 @@ code {
   border: 0;
 }
 
-.loading-overlay {
-  backdrop-filter: blur(2px);
-}
-
 @media (max-width: 768px) {
   .app-shell {
     display: block !important;
@@ -956,20 +966,106 @@ code {
   font-size: 1rem;
 }
 
-.loading-overlay {
+.loading-indicator {
+  display: flex;
+  min-width: 132px;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 1.1rem 1.4rem 0.9rem;
+  border: 1px solid rgba(226, 232, 240, 0.88);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 16px 35px rgba(15, 23, 42, 0.12);
+}
+
+.loading-indicator__ring {
+  position: relative;
+  width: 112px;
+  height: 112px;
+}
+
+.loading-indicator__tile {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 17px;
+  height: 27px;
+  border: 1px solid rgba(203, 213, 225, 0.62);
+  border-radius: 4px 4px 7px 7px;
+  background: linear-gradient(145deg, #f8fafc, #e5e9f1);
+  box-shadow: inset 0 -3px 0 rgba(148, 163, 184, 0.15), 0 3px 5px rgba(148, 163, 184, 0.2);
+  transform: translate(-50%, -50%) rotate(calc(var(--loader-index) * 30deg)) translateY(-43px);
+  transform-origin: center;
+  animation: loading-tiles 1.35s linear infinite;
+  animation-delay: calc(var(--loader-index) * -0.1125s);
+}
+
+.loading-indicator__label {
+  margin-top: -61px;
+  color: #60a5dc;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  z-index: 1;
+}
+
+@keyframes loading-tiles {
+  0%,
+  24% {
+    border-color: rgba(251, 113, 133, 0.75);
+    background: linear-gradient(145deg, #fb7185, #e11d48);
+    box-shadow: inset 0 -4px 0 rgba(136, 19, 55, 0.26), 0 4px 7px rgba(225, 29, 72, 0.28);
+  }
+
+  25%,
+  100% {
+    border-color: rgba(203, 213, 225, 0.62);
+    background: linear-gradient(145deg, #f8fafc, #e5e9f1);
+    box-shadow: inset 0 -3px 0 rgba(148, 163, 184, 0.15), 0 3px 5px rgba(148, 163, 184, 0.2);
+  }
+}
+
+.loading-indicator--table {
+  min-width: 112px;
+  padding: 0.7rem 0.9rem 0.55rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.12);
+}
+
+.loading-indicator--table .loading-indicator__ring {
+  width: 76px;
+  height: 76px;
+}
+
+.loading-indicator--table .loading-indicator__tile {
+  width: 11px;
+  height: 18px;
+  border-radius: 3px 3px 5px 5px;
+  transform: translate(-50%, -50%) rotate(calc(var(--loader-index) * 30deg)) translateY(-29px);
+}
+
+.loading-indicator--table .loading-indicator__label {
+  margin-top: -42px;
+  font-size: 0.58rem;
+}
+
+.action-loading-overlay {
   position: fixed;
   inset: 0;
-  z-index: 2000;
+  z-index: 2200;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(2px);
+  background: rgba(243, 246, 251, 0.68);
+  backdrop-filter: blur(4px);
 }
 
-.loading-spinner {
-  width: 4rem;
-  height: 4rem;
+@media (prefers-reduced-motion: reduce) {
+  .loading-indicator__tile {
+    animation-duration: 1.8s;
+  }
 }
 
 /* User Menu Dropdown Styles */

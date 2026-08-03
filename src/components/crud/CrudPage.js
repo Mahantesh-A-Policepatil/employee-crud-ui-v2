@@ -10,6 +10,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import { getStoredAuth } from "../../services/auth";
 import AppLayout from "../layout/AppLayout";
 import ForbiddenPage from "../common/ForbiddenPage";
+import ActionLoadingOverlay from "../common/ActionLoadingOverlay";
+import { dataTableLoadingMarkup } from "../common/loadingMarkup";
 import CrudFeedbackModal from "./CrudFeedbackModal";
 import CrudFormModal from "./CrudFormModal";
 import AttendanceUploadModal from "../attendance/AttendanceUploadModal";
@@ -354,6 +356,9 @@ function CrudPage({ config }) {
       serverSide: true,
       responsive: false,
       autoWidth: false,
+      language: {
+        processing: dataTableLoadingMarkup,
+      },
       layout: {
         topStart: null,
         topEnd: null,
@@ -483,7 +488,8 @@ function CrudPage({ config }) {
   const shouldShowForbidden = !canView || isForbidden;
 
   return (
-    <AppLayout loading={loading}>
+    <AppLayout>
+      <ActionLoadingOverlay show={loading} />
       {shouldShowForbidden ? (
         <ForbiddenPage />
       ) : (

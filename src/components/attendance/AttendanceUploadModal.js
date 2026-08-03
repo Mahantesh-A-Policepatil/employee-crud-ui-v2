@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal } from "bootstrap";
 import attendanceService from "../../services/attendanceService";
 import { getSafeApiErrorMessage } from "../../api/apiClient";
+import ActionLoadingOverlay from "../common/ActionLoadingOverlay";
 
 const months = [
   { value: 1, label: "January" },
@@ -78,9 +79,11 @@ function AttendanceUploadModal({ modalRef, onSuccess }) {
   };
 
   return (
-    <div className="modal fade" ref={modalRef} tabIndex="-1">
-      <div className="modal-dialog">
-        <div className="modal-content">
+    <>
+      <ActionLoadingOverlay show={loading} />
+      <div className="modal fade" ref={modalRef} tabIndex="-1">
+        <div className="modal-dialog">
+          <div className="modal-content">
           <form onSubmit={handleSubmit}>
             <div className="modal-header bg-success text-white">
               <h5 className="modal-title">Upload Attendance CSV</h5>
@@ -156,9 +159,10 @@ function AttendanceUploadModal({ modalRef, onSuccess }) {
               </button>
             </div>
           </form>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -8,6 +8,8 @@ import { getStoredAuth } from "../../services/auth";
 import projectCrudConfig from "../../crud/projectCrudConfig";
 import AppLayout from "../layout/AppLayout";
 import ForbiddenPage from "../common/ForbiddenPage";
+import ActionLoadingOverlay from "../common/ActionLoadingOverlay";
+import { dataTableLoadingMarkup } from "../common/loadingMarkup";
 import CrudFeedbackModal from "../crud/CrudFeedbackModal";
 import CrudFormModal from "../crud/CrudFormModal";
 import { createEmptyForm, formatValidationErrors, validateForm } from "../crud/crudUtils";
@@ -198,6 +200,9 @@ function ListProject() {
             serverSide: true,
             responsive: false,
             autoWidth: false,
+            language: {
+                processing: dataTableLoadingMarkup,
+            },
             layout: {
                 topStart: null, topEnd: null, bottomStart: "info",
                 bottomEnd: { className: "dt-layout-end col-md-auto ms-auto d-flex justify-content-end align-items-center gap-3", features: ["pageLength", "paging"] },
@@ -275,7 +280,8 @@ function ListProject() {
     };
 
     return (
-        <AppLayout loading={loading}>
+        <AppLayout>
+            <ActionLoadingOverlay show={loading} />
             {!canView || isForbidden ? <ForbiddenPage /> : <>
                 <div className="page-title-row"><h1>{config.title}</h1></div>
                 <div className="table-panel">
